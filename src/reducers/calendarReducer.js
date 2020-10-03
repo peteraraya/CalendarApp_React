@@ -1,21 +1,24 @@
 
-import moment from 'moment';
 import { types } from '../types/types';
+
+// {
+//     id: new Date().getTime(),
+//     title: 'Cumpleaños del jefe',
+//     start: moment().toDate(), // lo mismo que un new Date de js
+//     end: moment().add(2, 'hours').toDate(),
+//     bgColor: '#fafafa',
+//                         notes: 'Comprar pastel',
+//                             user: {
+//         _id: '123',
+//             name: 'Pedro'
+//     }
+// }
+
+
 
 const initialState = {
     // eventos del calendario
-    events: [{
-        id: new Date().getTime(),
-        title: 'Cumpleaños del jefe',
-        start: moment().toDate(), // lo mismo que un new Date de js
-        end: moment().add(2, 'hours').toDate(),
-        bgColor: '#fafafa',
-        notes: 'Comprar pastel',
-        user: {
-            _id: '123',
-            name: 'Pedro'
-        }
-    }],
+    events: [],
     // objeto quie tendra todas las propiedades del evento - sera un arreglo
     activeEvent: null
 };
@@ -63,7 +66,17 @@ export const calendareducer = (state = initialState, action) => {
                 activeEvent: null
 
             }
+        
+        case types.eventLoaded:
+            return {
+                ...state,
+                events: [ ...action.payload]
+            }
 
+        case types.eventLogout:
+            return {
+                ...initialState
+            }
 
         default:
             return state;

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 import DateTimePicker from 'react-datetime-picker';
-import moment, { now } from 'moment';
+import moment from 'moment';
 import Swal from 'sweetalert2';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent, eventUpdated } from '../../actions/events';
+import { eventClearActiveEvent, eventStartAdddNew, eventStartUpdate } from '../../actions/events';
 const customStyles = {
     content: {
         top: '50%',
@@ -116,21 +116,12 @@ export const CalendarModal = () => {
 
         // actualizando
         if ( activeEvent ) {
-            dispatch( eventUpdated( formValues ) );
+            dispatch( eventStartUpdate( formValues ) );
         } else { // creando uno nuevo
-            dispatch(eventAddNew({
-                ...formValues,
-                id: new Date().getTime(),
-                user: {
-                    _id: '123',
-                    name: 'Pedro'
-                }
-            }));
+            dispatch( eventStartAdddNew( formValues ));
         }
     
 
-        
-        console.log(formValues)
         setTitleValid(true);
         closeModal();
     }
@@ -139,11 +130,10 @@ export const CalendarModal = () => {
 
     return (
         <Modal
-            isOpen={ modalOpen } // muestra u oculta el modal
-            // onAfterOpen={afterOpenModal}
+            isOpen={ modalOpen } 
             onRequestClose={closeModal}
             style={ customStyles }
-            closeTimeoutMS={500} // tiempo que se cierra el modal
+            closeTimeoutMS={500} 
             className="modal"
             overlayClassName="modal-fondo"
 
@@ -159,7 +149,7 @@ export const CalendarModal = () => {
                     <label>Fecha y hora inicio</label>
                     <DateTimePicker
                         onChange={ handleStartDateChange }
-                        value={ dateStart} // valor inicial
+                        value={ dateStart} 
                     />
 
                 </div>
@@ -169,7 +159,7 @@ export const CalendarModal = () => {
                     <DateTimePicker
                         onChange={ handleEndDatechange }
                         minDate={ dateStart }
-                        value={ dateEnd } // valor inicial                       
+                        value={ dateEnd }                   
                     />
 
                 </div>

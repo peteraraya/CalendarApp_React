@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { useDispatch, useSelector } from 'react-redux';
 // BigCalendar
@@ -15,7 +15,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 // Locale
 import 'moment/locale/es';
 import { uiOpenModal } from '../../actions/ui';
-import { eventSetActive, eventClearActiveEvent } from '../../actions/events';
+import { eventSetActive, eventClearActiveEvent, eventStartLoading } from '../../actions/events';
 import { AddNewFab } from '../ui/AddNewFab';
 import { DeleteEventFab } from '../ui/DeleteEventFab';
 
@@ -30,9 +30,17 @@ export const CalendarScreen = () => {
 
     // useSelector
     const { events, activeEvent } = useSelector(state => state.calendar);
-    console.log(events);
 
-    const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
+    // leeremos el store
+    const { uid } = useSelector(state => state.auth);
+
+    const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month');
+
+    useEffect(() => {
+
+        dispatch(eventStartLoading());
+
+    }, [dispatch])
 
 
     const onDoubleClick = (e) => {
@@ -58,9 +66,11 @@ export const CalendarScreen = () => {
     }
 
     const eventStyleGetter = (event, start, end, isSelected) => {
+
+        // console.log(event)
         // console.log(event, start, end, isSelected);
         const style = {
-            backgroundColor: '#367cf7',
+            backgroundColor: (uid === event.user._id) ? '#367cf7' : '#465660',
             borderRadius: '0px',
             opacity: 0.8,
             display: 'block',
@@ -82,9 +92,9 @@ export const CalendarScreen = () => {
                 endAccessor="end"
                 messages={messages}
                 eventPropGetter={eventStyleGetter}
-                onDoubleClickEvent={onDoubleClick} // al momento de hacer doble click que se dispare
-                onSelectEvent={onSelectClick} // al momento que haga click se dispare
-                onView={onViewChange} // sabemos en que vista estamos
+                onDoubleClickEvent={onDoubleClick} 
+                onSelectEvent={onSelectClick}
+                onView={onViewChange} 
                 onSelectSlot={onSelectSlot}
                 selectable={true}
                 view={lastView}
