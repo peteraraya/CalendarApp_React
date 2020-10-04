@@ -45,7 +45,7 @@ export const CalendarModal = () => {
     // Extraemos los titulos y fechas
     const { title, notes, start, end } = formValues;
 
-
+ 
     useEffect(() => {
         // estar pendiente
 
